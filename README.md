@@ -6,6 +6,7 @@ In this repository, I provide a set of Python scripts for implementing the Nelde
 
 Some of the key features of this repository include:
 
-Implementation of the Nelder-Mead algorithm in Python, optimized for financial market modelling
-Example Jupyter notebooks demonstrating how to use the code
+- Implementation of the Nelder-Mead algorithm in Python, optimized for financial market modelling
+- Example Jupyter notebooks demonstrating how to use the code
+
 I hope that this repository will be useful for researchers and practitioners interested in applying the Nelder-Mead algorithm to financial market modelling. Please feel free to use the code and data for your own research, and to contribute to the repository by submitting bug reports or pull requests.
