@@ -48,11 +48,12 @@ pip install pandas numpy matplotlib scipy
 python Data-Analysis.py
 ```
 
-- The program will output the best correlation value and the corresponding weights for each indicator. It will also generate a plot of the NASDAQ composite index and the final weighted average of the indicators.
-- The program will also generate a file named output.txt in the Market Analysis directory, which contains the following information:
-- 
--- The weights for each indicator.
+The program will output the best correlation value and the corresponding weights for each indicator. It will also generate a plot of the NASDAQ composite index and the final weighted average of the indicators.
 
--- The best correlation value.
+The program will also generate a file named output.txt in the Market Analysis directory, which contains the following information:
+ 
+- The weights for each indicator.
 
--- The weights and correlation value for each processor.
+- The best correlation value.
+
+- The weights and correlation value for each processor.
