@@ -11,15 +11,15 @@ Some of the key features of this repository include:
 
 I hope that this repository will be useful for researchers and practitioners interested in applying the Nelder-Mead algorithm to financial market modelling. Please feel free to use the code and data for your own research, and to contribute to the repository by submitting bug reports or pull requests.
 
-#How to Use the Code
+# How to Use the Code
 
--Clone the repository to your local machine.
+- Clone the repository to your local machine.
 
--Make sure you have all the necessary data files in the correct folder. Specifically, you should have all the indicator CSV files downloaded from https://fred.stlouisfed.org in a folder called "Data" that is located on your desktop.
+- Make sure you have all the necessary data files in the correct folder. Specifically, you should have all the indicator CSV files downloaded from https://fred.stlouisfed.org in a folder called "Data" that is located on your desktop.
 
--Open the "data_unifier.py" script located in this repository.
+- Open the "data_unifier.py" script located in this repository.
 
--Change the pathname to the one of the folder on your desktop where the indicator CSV files are located.
+- Change the pathname to the one of the folder on your desktop where the indicator CSV files are located.
 
 ```
 #Username/path will change depending on install locaiton
@@ -40,16 +40,16 @@ To install the packages, you can use pip:
 pip install pandas numpy matplotlib scipy
 ```
 
--update the pathname as mentioned previously
+- Update the pathname as mentioned previously
 
--Run the following command to analyze the data:
+- Run the following command to analyze the data:
 
 ```
 python Data-Analysis.py
 ```
 
--The program will output the best correlation value and the corresponding weights for each indicator. It will also generate a plot of the NASDAQ composite index and the final weighted average of the indicators.
--The program will also generate a file named output.txt in the Market Analysis directory, which contains the following information:
---The weights for each indicator.
---The best correlation value.
---The weights and correlation value for each processor.
+- The program will output the best correlation value and the corresponding weights for each indicator. It will also generate a plot of the NASDAQ composite index and the final weighted average of the indicators.
+- The program will also generate a file named output.txt in the Market Analysis directory, which contains the following information:
+-- The weights for each indicator.
+-- The best correlation value.
+-- The weights and correlation value for each processor.
