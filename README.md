@@ -26,11 +26,11 @@ I hope that this repository will be useful for researchers and practitioners int
 /Users/yourusername/Desktop/Market Analysis/Market Price/NASDAQCOM.csv
 ```
 
--Change the "start_date" variable to the date from which you want to start your analysis.
+- Change the "start_date" variable to the date from which you want to start your analysis.
 
--Run the "data_unifier.py" script. This will read in all the CSV files in the specified folder, resample the data to monthly frequency, and save the resampled data to a new CSV file called "resampled_data.csv" in the same folder.
+- Run the "data_unifier.py" script. This will read in all the CSV files in the specified folder, resample the data to monthly frequency, and save the resampled data to a new CSV file called "resampled_data.csv" in the same folder.
 
--Check the output of the script to ensure that all files were included in the final resampled data. If any files were not included, double-check that they are in the correct folder and that the file name matches the column name in the resampled data.
+- Check the output of the script to ensure that all files were included in the final resampled data. If any files were not included, double-check that they are in the correct folder and that the file name matches the column name in the resampled data.
 
 To run the program, you will need Python 3 and the following Python packages: pandas, numpy, matplotlib, and scipy.
 
