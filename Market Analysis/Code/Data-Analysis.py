@@ -139,7 +139,12 @@ if __name__ == "__main__":
             f.write(f"Processor {i+1}: correlation={corr}  values={coeffs}\n")
 
 
-    # Plot the final weighted average and the market data
+   # Increase font size of labels and titles
+    plt.rcParams.update({'font.size': 12})
+
+    # Increase linewidth of graph lines
+    plt.rcParams['lines.linewidth'] = 1.5
+
     # Create a figure with two y-axes
     fig, ax1 = plt.subplots(figsize=(10, 6))
     ax2 = ax1.twinx()
@@ -160,7 +165,7 @@ if __name__ == "__main__":
     ax2.set_ylabel('Weighted Average', color='red')
 
     # Add legends to the plot
-    ax1.legend(loc='upper left')
+    ax1.legend(loc='upper right')
     ax2.legend(loc='upper right')
 
     # Turn on the grid
@@ -168,6 +173,9 @@ if __name__ == "__main__":
 
     # Set x-axis limits to the specified timeframe
     ax1.set_xlim(start_graphing, end_graphing)
+
+    # Add legend box with training information
+    ax1.text(0.05, 0.05, f'Time offset: {t_offset}, {t_frame}\nTraining Timeframe: {training_timeframe}\nTraining Frame Correlation: {best_corr:.12f}', transform=ax1.transAxes, bbox=dict(facecolor='white', alpha=0.8), verticalalignment='bottom', horizontalalignment='left')
 
     # Show the plot
     plt.show()
