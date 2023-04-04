@@ -1,3 +1,11 @@
+
+#               / / / _|                    | |              | |             (_)      | |  (_)              
+#     _ __    / / | |_  _ __   ___   _ __  | |_           __| |  ___  _ __   _   ___ | |_  _   ___   _ __  
+#   | '__|  / /  |  _|| '__| / _ \ | '_ \ | __|         / _  | / _ \|  _ \ | | / __|| __|| | / _ \ |     \ 
+#  | |    / /   | |  | |   | (_) || | | || |_         | (_| ||  __/| |_) || || (__ | |_ | || (_) || | | |
+# |_|   /_/    |_|  |_|    \___/ |_| |_| \__|         \__,_| \___|| .__/ |_| \___| \__||_| \___/ |_| |_|
+#                                            ______              | |                                   
+#                                          |______|             |_|                                                             
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,9 +13,17 @@ from scipy.optimize import minimize
 from multiprocessing import Pool, cpu_count
 
 # Set time offset in unit of time (m or q)
-t_frame = 'M'
-t_offset = 2
-graph_timeframe = '2021'  # calculation start date
+t_frame = 'M' #time unit
+t_offset = 1  #time offset, how much "prediction time" there is
+
+# Define the timeframe for the plot
+graph_timeframe = '2021-01-01:2023-05-01'
+start_graphing, end_graphing = graph_timeframe.split(':')
+
+# Define the timeframe for training
+training_timeframe = '2021-01-01:2023-01-01'
+start_training, end_training = training_timeframe.split(':')
+
 
 # Read the stock market data
 market_df = pd.read_csv('/Users/yourusername/Desktop/Market Analysis/Market Price/NASDAQCOM.csv', parse_dates=['DATE'])
@@ -19,14 +35,14 @@ market_df['NASDAQCOM'] = pd.to_numeric(market_df['NASDAQCOM'], errors='coerce')
 market_df = market_df.fillna(method='ffill')
 
 # Resample the market data to monthly or quarterly based on t_frame variable
-market_df = market_df.resample(t_frame).mean()
+market_df = market_df.resample(t_frame).last()
 
 # Load the resampled data
 df_resampled = pd.read_csv('/Users/yourusername/Desktop/Market Analysis/resampled_data.csv', parse_dates=['DATE'])
 df_resampled = df_resampled.set_index('DATE')
 
 # Resample the data to monthly or quarterly based on t_frame variable
-df_resampled = df_resampled.resample(t_frame).mean()
+df_resampled = df_resampled.resample(t_frame).last()
 
 # Fill missing values with the previous non-missing value
 df_resampled = df_resampled.fillna(method='ffill')
@@ -37,7 +53,7 @@ market_df = market_df.shift(-t_offset, freq=t_frame)
 # Create a list of indicator names
 indicator_names = list(df_resampled.columns)
 
-# Set the bounds for the coefficients (between 0 and 1)
+# Set the bounds for the coefficients (between 0 and 0.5)
 bounds = [(0, 1)] * len(indicator_names)
 
 # Set the initial guesses for the coefficients (random values between 0 and 1)
@@ -57,8 +73,8 @@ def objective_function(coeffs):
     """
     weighted_avg_price = weighted_avg(coeffs)
     market_price = market_df['NASDAQCOM']
-    #corr = market_price.corr(weighted_avg_price)
-    corr = market_price[graph_timeframe:].corr(weighted_avg_price[graph_timeframe:])
+    corr = market_price[start_training:end_training].corr(weighted_avg_price[start_training:end_training])
+    
     return -corr
 
 
@@ -66,7 +82,7 @@ def optimize_single_instance(x0):
     """
     Optimizes the objective function using the Nelder-Mead algorithm with a single initial guess.
     """
-    result = minimize(objective_function, x0, method='Nelder-Mead', bounds=bounds, options={'maxiter': 10000000})
+    result = minimize(objective_function, x0, method='Nelder-Mead', bounds=bounds, options={'maxiter': 1000000})
     return (result.x, -result.fun)
 
 
@@ -123,20 +139,35 @@ if __name__ == "__main__":
             f.write(f"Processor {i+1}: correlation={corr}  values={coeffs}\n")
 
 
-    #Plot the final weighted average and the market data
-    # Plot the market data and the weighted average of indicators
+    # Plot the final weighted average and the market data
+    # Create a figure with two y-axes
     fig, ax1 = plt.subplots(figsize=(10, 6))
     ax2 = ax1.twinx()
-    #market_df = market_df.shift(t_offset, freq=t_frame)
-    market_df.loc[graph_timeframe:].plot(ax=ax1, label='NASDAQCOM', color='blue')
-    final_weighted_avg.loc[graph_timeframe:].plot(ax=ax2, label='Weighted Average', color='red')
+
+    # Shift the data by the specified time offset and frequency
+    market_df = market_df.shift(t_offset, freq=t_frame)
+    final_weighted_avg = final_weighted_avg.shift(t_offset, freq=t_frame)
+
+    # Plot the market data and the weighted average of indicators
+    # Only plot data within the specified timeframe
+    market_df.loc[start_graphing:end_graphing].plot(ax=ax1, label='NASDAQCOM', color='blue')
+    final_weighted_avg.loc[start_graphing:end_graphing].plot(ax=ax2, label='Weighted Average', color='red')
+
+    # Set the plot title and labels for the x- and y-axes
     ax1.set_title('Market Data vs Weighted Average of Indicators')
     ax1.set_xlabel('Year')
     ax1.set_ylabel('NASDAQCOM', color='blue')
     ax2.set_ylabel('Weighted Average', color='red')
+
+    # Add legends to the plot
     ax1.legend(loc='upper left')
     ax2.legend(loc='upper right')
+
+    # Turn on the grid
     ax1.grid(True)
+
     # Set x-axis limits to the specified timeframe
-    ax1.set_xlim(pd.Timestamp(graph_timeframe), pd.Timestamp.now())
+    ax1.set_xlim(start_graphing, end_graphing)
+
+    # Show the plot
     plt.show()
