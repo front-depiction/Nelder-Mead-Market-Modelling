@@ -166,7 +166,7 @@ if __name__ == "__main__":
 
     # Add legends to the plot
     ax1.legend(loc='upper right')
-    ax2.legend(loc='upper right')
+    ax2.legend(loc='upper left')
 
     # Turn on the grid
     ax1.grid(True)
