@@ -3,6 +3,9 @@ from fredapi import Fred
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+import os
+
+output_path = "/Users/yourusername/Desktop/Market Analysis/resampled_data.csv"
 
 popular_indicators = sorted([
     ("DEXCAUS", "Canada / U.S. Foreign Exchange Rate"),
@@ -42,7 +45,8 @@ def resample_fred_data(api_key, series_ids, start_date, end_date, time_interval)
         df_resampled[series_id] = df.resample(t_frame).mean()
 
     # Write the resampled data to a CSV file
-    output_path = "/Users/florienlazaro/Desktop/Market Analysis/resampled_data.csv"
+    output_path = output_path_var.get()
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     df_resampled = df_resampled.fillna(method='ffill')
     df_resampled.to_csv(output_path)
 
@@ -79,6 +83,13 @@ end_date_label = tk.Label(bottom_frame, text="End Date:")
 end_date_entry = tk.Entry(bottom_frame, textvariable=end_date_var)
 time_interval_label = tk.Label(bottom_frame, text="Time Interval:")
 time_interval_combobox = ttk.Combobox(bottom_frame, textvariable=time_interval_var, values=['W', 'M', 'Q'])
+output_path_var = tk.StringVar(value=output_path)
+
+output_path_label = tk.Label(bottom_frame, text="Output Path:")
+output_path_entry = tk.Entry(bottom_frame, textvariable=output_path_var)
+
+output_path_label.grid(in_=top_frame, row=4, column=0, padx=(10, 5), pady=(5, 5), sticky="w")
+output_path_entry.grid(in_=top_frame, row=4, column=1, padx=(0, 10), pady=(5, 5), sticky="ew")
 
 api_key_label.grid(in_=top_frame, row=0, column=0, padx=(10, 5), pady=(10, 5), sticky="w")
 api_key_entry.grid(in_=top_frame, row=0, column=1, padx=(0, 10), pady=(10, 5), sticky="ew")
@@ -200,10 +211,8 @@ def on_submit():
         return
 
     try:
-        df = resample_fred_data(api_key, selected_indicators, start_date, end_date, time_interval)
-        file_path = f"FRED_data_{time_interval}_{start_date.replace('-', '')}_{end_date.replace('-', '')}.csv"
-        df.to_csv(file_path)
-        messagebox.showinfo("Success", f"Data saved to {file_path}")
+        resample_fred_data(api_key, selected_indicators, start_date, end_date, time_interval)
+        messagebox.showinfo("Success", f"Data saved at {output_path_var.get()} ")
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
