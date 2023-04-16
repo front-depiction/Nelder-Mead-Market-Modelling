@@ -62,8 +62,7 @@ time_interval = 'M'
 bottom_frame = tk.Tk()
 bottom_frame.title("FRED Data Resampler")
 
-bottom_frame.columnconfigure(0, weight=0)
-bottom_frame.columnconfigure(1, weight=1)
+bottom_frame.columnconfigure(0, weight=1)
 
 top_frame = tk.Frame(bottom_frame)
 top_frame.grid(row=0, column=0, columnspan=2, sticky="nsew")
